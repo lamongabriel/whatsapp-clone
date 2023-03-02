@@ -1,0 +1,81 @@
+@import '../utilities/variables';
+
+.appWindow {
+  display: flex;
+  min-height: 100vh;
+  background-color: $gray-150;
+
+  width: 100%;
+}
+
+.appSideBar {
+  width: 35%;
+  max-width: 26rem;
+
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid $gray-300;
+
+  .icon {
+    color: $gray-600;
+  }
+
+  .sideBarHeader {
+    display: flex;
+    height: 3.75rem;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 0 1rem;
+
+    img {
+      width: 2.5rem;
+      height: 2.5rem;
+      border-radius: 100%;
+
+      cursor: pointer;
+    }
+
+    .headerButtons {
+      display: flex;
+
+      .headerBtn {
+        width: 2.5rem;
+        height: 2.5rem;
+        border-radius: 100%;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+      }
+    }
+  }
+
+  .sideBarSearch {
+    background-color: $gray-50;
+    border-bottom: 1px $gray-100;
+    padding: 0.3125rem 0.9375rem;
+
+    .searchInput {
+      background-color: $white;
+      height: 2.5rem;
+      border-radius: 1.25rem;
+
+      display: flex;
+      align-items: center;
+      padding: 0 0.625rem;
+
+      input {
+        flex: 1;
+        border: 0;
+        outline: 0;
+        background-color: transparent;
+        margin-left: 0.625rem;
+      }
+    }
+  }
+}
+
+.appContent {
+}
