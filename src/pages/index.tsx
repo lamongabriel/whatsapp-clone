@@ -2,31 +2,17 @@ import { Fragment, useState } from 'react';
 import Image from 'next/image';
 
 import ChatListItem from '@/components/ChatListItem';
-
+import NoChatSelected from '@/components/NoChatSelected';
+import Chat from '@/components/Chat';
 import { DonutLarge, ChatSharp, MoreVert, Search } from '@mui/icons-material';
-import styles from '../styles/pages/Home.module.scss';
 
+import styles from '../styles/pages/Home.module.scss';
 import defaultAvatar from '../assets/avatar.png';
 
 export default function Home() {
-  const [chatList] = useState([
-    {},
-    {},
-    {},
-    {},
-    {},
-    {},
-    {},
-    {},
-    {},
-    {},
-    {},
-    {},
-    {},
-    {},
-    {},
-    {},
-  ]);
+  const [chatList] = useState([{}, {}]);
+
+  const [activeChat, setActiveChat] = useState({});
 
   return (
     <main>
@@ -56,13 +42,14 @@ export default function Home() {
 
           <div className={styles.sideBarChatList}>
             {chatList.map((chat, key) => (
-              <Fragment key={key}>
-                <ChatListItem />
-              </Fragment>
+              <ChatListItem key={key} onClick={() => setActiveChat(chat)} />
             ))}
           </div>
         </aside>
-        <div className={styles.appContent}>...</div>
+        <div className={styles.appContent}>
+          {activeChat.chatId !== undefined && <Chat />}
+          {activeChat.chatId === undefined && <NoChatSelected />}
+        </div>
       </div>
     </main>
   );

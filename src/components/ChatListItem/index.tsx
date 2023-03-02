@@ -3,9 +3,13 @@ import styles from './styles.module.scss';
 
 import defaultAvatar from '../../assets/avatar.png';
 
-export default function ChatListItem() {
+interface ChatListItemProps {
+  onClick: () => void;
+}
+
+export default function ChatListItem({ onClick }: ChatListItemProps) {
   return (
-    <div className={styles.chatListItem}>
+    <div className={styles.chatListItem} onClick={onClick}>
       <Image
         src={defaultAvatar}
         className={styles.chatListAvatar}
