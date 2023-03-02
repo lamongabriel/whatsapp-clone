@@ -1,10 +1,16 @@
 {
-  "extends": ["next/core-web-vitals", "airbnb", "airbnb-typescript"],
+  "extends": [
+    "next/core-web-vitals",
+    "airbnb",
+    "airbnb-typescript",
+    "prettier"
+  ],
   "parserOptions": {
     "project": "./tsconfig.json"
   },
   "rules": {
     "react/react-in-jsx-scope": "off",
-    "react/jsx-props-no-spreading": "off"
+    "react/jsx-props-no-spreading": "off",
+    "prettier/prettier": "error"
   }
 }
