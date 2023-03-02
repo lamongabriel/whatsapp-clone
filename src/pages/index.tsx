@@ -9,7 +9,24 @@ import styles from '../styles/pages/Home.module.scss';
 import defaultAvatar from '../assets/avatar.png';
 
 export default function Home() {
-  const [chatList] = useState([{}, {}, {}, {}]);
+  const [chatList] = useState([
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+  ]);
 
   return (
     <main>

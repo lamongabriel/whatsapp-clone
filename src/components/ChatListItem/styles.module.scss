@@ -6,7 +6,11 @@
   height: 4.375rem;
   padding: 0 1rem;
   cursor: pointer;
-  border-bottom: 1px solid $gray-100;
+  transition: background-color 200ms;
+
+  &:hover {
+    background-color: $gray-50;
+  }
 
   .chatListAvatar {
     width: 3.125rem;
@@ -16,10 +20,15 @@
 
   .chatListLines {
     flex: 1;
+    height: 100%;
     display: flex;
     flex-direction: column;
     justify-content: center;
     margin-left: 1rem;
+    border-bottom: 1px solid $gray-100;
+
+    flex-wrap: wrap;
+    min-width: 0;
 
     .chatListLine {
       display: flex;
@@ -37,11 +46,19 @@
         color: $gray-500;
       }
 
-      p {
+      .chatListMessage {
         font-size: 0.875rem;
         color: $gray-500;
         display: flex;
         width: 100%;
+        margin-top: 0.25rem;
+
+        p {
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+          margin: 0;
+        }
       }
     }
   }

@@ -2,7 +2,7 @@
 
 .appWindow {
   display: flex;
-  min-height: 100vh;
+  height: 100vh;
   background-color: $gray-150;
 
   width: 100%;
@@ -80,6 +80,19 @@
     flex: 1;
     background-color: $white;
     overflow-y: auto;
+
+    &::-webkit-scrollbar {
+      width: 0.4rem;
+      height: 0.4rem;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: rgba($color: #000000, $alpha: 0.2);
+    }
+
+    scrollbar-width: thin;
+    scrollbar-color: rgba($color: #000000, $alpha: 0.2);
+    scroll-behavior: smooth;
   }
 }
 

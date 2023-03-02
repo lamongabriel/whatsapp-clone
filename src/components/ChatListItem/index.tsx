@@ -17,7 +17,12 @@ export default function ChatListItem() {
           <time>09:38</time>
         </div>
         <div className={styles.chatListLine}>
-          <p>How you doin?</p>
+          <div className={styles.chatListMessage}>
+            <p>
+              event - compiled client and server successfully in 726 ms (11167
+              modules)
+            </p>
+          </div>
         </div>
       </div>
     </div>
