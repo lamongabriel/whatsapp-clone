@@ -1,0 +1,48 @@
+@import '../../styles/utilities/variables';
+
+.chatListItem {
+  display: flex;
+  align-items: center;
+  height: 4.375rem;
+  padding: 0 1rem;
+  cursor: pointer;
+  border-bottom: 1px solid $gray-100;
+
+  .chatListAvatar {
+    width: 3.125rem;
+    height: 3.125rem;
+    border-radius: 100%;
+  }
+
+  .chatListLines {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-left: 1rem;
+
+    .chatListLine {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+
+      div {
+        font-size: 1.05rem;
+        color: $black;
+      }
+
+      time {
+        font-size: 0.75rem;
+        color: $gray-500;
+      }
+
+      p {
+        font-size: 0.875rem;
+        color: $gray-500;
+        display: flex;
+        width: 100%;
+      }
+    }
+  }
+}
