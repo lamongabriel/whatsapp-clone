@@ -7,7 +7,7 @@ import connectPhone from '../../assets/connectPhone.svg';
 export default function NoChatSelected() {
   return (
     <div className={styles.noChatSelected}>
-      <Image src={connectPhone} alt="WhatsApp Connect Your Phone" />
+      <Image src={connectPhone} priority alt="WhatsApp Connect Your Phone" />
       <h1>Keep your phone connected</h1>
       <h2>
         WhatsApp Web connects to your phone to sync messages. To reduce data
