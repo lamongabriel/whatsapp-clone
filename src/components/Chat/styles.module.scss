@@ -47,6 +47,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    overflow: hidden;
+    transition: all ease-in-out 200ms;
 
     cursor: pointer;
     svg {
@@ -61,6 +63,12 @@
     background-size: contain;
     background-position: center;
     background-repeat: repeat;
+  }
+
+  .emojiPicker {
+    height: 0;
+    overflow-y: hidden;
+    transition: height cubic-bezier(0.175, 0.885, 0.32, 1.275) 200ms;
   }
 
   .chatFooter {
