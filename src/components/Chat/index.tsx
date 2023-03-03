@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import Image from 'next/image';
 
-import EmojiPicker, { EmojiStyle } from 'emoji-picker-react';
+import EmojiPicker, { EmojiStyle, EmojiClickData } from 'emoji-picker-react';
 import {
   Search,
   AttachFile,
@@ -27,6 +27,10 @@ export default function Chat() {
 
   function handleCloseEmoji() {
     setIsEmojiOpen(false);
+  }
+
+  function handleEmojiClick(data: EmojiClickData) {
+    setMessage(message + data.emoji);
   }
 
   return (
@@ -69,6 +73,7 @@ export default function Chat() {
           searchDisabled
           emojiStyle={EmojiStyle.APPLE}
           previewConfig={{ showPreview: false }}
+          onEmojiClick={handleEmojiClick}
         />
       </div>
       <footer className={styles.chatFooter}>
