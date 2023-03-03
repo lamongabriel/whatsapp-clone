@@ -2,14 +2,24 @@ import Image from 'next/image';
 import styles from './styles.module.scss';
 
 import defaultAvatar from '../../assets/avatar.png';
+import { ChatType } from '@/typings/Chat';
 
 interface ChatListItemProps {
   onClick: () => void;
+  active: boolean;
+  data: ChatType;
 }
 
-export default function ChatListItem({ onClick }: ChatListItemProps) {
+export default function ChatListItem({
+  onClick,
+  active,
+  data,
+}: ChatListItemProps) {
   return (
-    <div className={styles.chatListItem} onClick={onClick}>
+    <div
+      className={`${styles.chatListItem} ${active ? styles.active : ''}`}
+      onClick={onClick}
+    >
       <Image
         src={defaultAvatar}
         className={styles.chatListAvatar}
@@ -17,7 +27,7 @@ export default function ChatListItem({ onClick }: ChatListItemProps) {
       />
       <div className={styles.chatListLines}>
         <div className={styles.chatListLine}>
-          <div>Gabriel Lamon Lopes</div>
+          <div>{data.title}</div>
           <time>09:38</time>
         </div>
         <div className={styles.chatListLine}>

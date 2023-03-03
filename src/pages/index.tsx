@@ -9,13 +9,18 @@ import { DonutLarge, ChatSharp, MoreVert, Search } from '@mui/icons-material';
 import styles from '../styles/pages/Home.module.scss';
 import defaultAvatar from '../assets/avatar.png';
 
-export default function Home() {
-  const [chatList] = useState([{}, {}]);
+import { ChatType } from '@/typings/Chat';
 
-  const [activeChat, setActiveChat] = useState({});
+export default function Home() {
+  const [chatList] = useState<ChatType[]>([
+    { chatId: 's45tgc-4cxvghh6-zcz4hg', title: 'Chat 1' },
+    { chatId: '0xvccv-d29tvaax-fmmv38', title: 'Chat 2' },
+  ]);
+
+  const [activeChat, setActiveChat] = useState<ChatType>({} as ChatType);
 
   return (
-    <main>
+    <main className={styles.main}>
       <div className={styles.appWindow}>
         <aside className={styles.appSideBar}>
           <header className={styles.sideBarHeader}>
@@ -42,7 +47,12 @@ export default function Home() {
 
           <div className={styles.sideBarChatList}>
             {chatList.map((chat, key) => (
-              <ChatListItem key={key} onClick={() => setActiveChat(chat)} />
+              <ChatListItem
+                data={chat}
+                active={chat.chatId === activeChat.chatId}
+                key={key}
+                onClick={() => setActiveChat(chat)}
+              />
             ))}
           </div>
         </aside>

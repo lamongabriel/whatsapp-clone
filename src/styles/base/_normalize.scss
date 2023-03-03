@@ -22,7 +22,14 @@ main {
 body {
   line-height: 1;
   overflow-x: hidden;
-  background-color: $gray-200;
+  background-color: $app-background;
+
+  background-color: $app-background;
+  background-image: linear-gradient(
+    180deg,
+    $app-background,
+    $app-background-deeper
+  );
 }
 
 body,
