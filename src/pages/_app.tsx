@@ -1,3 +1,4 @@
+import 'regenerator-runtime/runtime';
 import type { AppProps } from 'next/app';
 
 import '../styles/global.scss';

@@ -61,7 +61,7 @@
     flex: 1;
     background-color: $conversation-panel-background;
     background-size: contain;
-    background-position: center;
+    background-position: top;
     background-repeat: repeat;
   }
 
@@ -96,6 +96,12 @@
         border-radius: 2.5rem;
         color: $black;
         padding-left: 1rem;
+      }
+    }
+
+    .footerPost {
+      .micActive {
+        color: #126ece;
       }
     }
   }

@@ -1,5 +1,8 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Image from 'next/image';
+import SpeechRecognition, {
+  useSpeechRecognition,
+} from 'react-speech-recognition';
 
 import EmojiPicker, { EmojiStyle, EmojiClickData } from 'emoji-picker-react';
 import {
@@ -21,6 +24,14 @@ export default function Chat() {
   const [isEmojiOpen, setIsEmojiOpen] = useState(false);
   const [message, setMessage] = useState('');
 
+  const {
+    transcript,
+    listening,
+    resetTranscript,
+    browserSupportsSpeechRecognition,
+    isMicrophoneAvailable,
+  } = useSpeechRecognition();
+
   function handleOpenEmoji() {
     setIsEmojiOpen(true);
   }
@@ -32,6 +43,34 @@ export default function Chat() {
   function handleEmojiClick(data: EmojiClickData) {
     setMessage(message + data.emoji);
   }
+
+  function handleSendClick() {
+    console.log('click');
+  }
+
+  function startListening() {
+    if (browserSupportsSpeechRecognition && isMicrophoneAvailable) {
+      SpeechRecognition.startListening({ language: 'pt-br' });
+    } else {
+      alert(
+        "Your browser doesn't support Speech Recognition our your mic is disabled."
+      );
+    }
+  }
+
+  function stopListening() {
+    if (browserSupportsSpeechRecognition && isMicrophoneAvailable) {
+      SpeechRecognition.stopListening();
+    } else {
+      alert(
+        "Your browser doesn't support Speech Recognition our your mic is disabled."
+      );
+    }
+  }
+
+  useEffect(() => {
+    setMessage(transcript);
+  }, [transcript]);
 
   return (
     <div className={styles.chatWindow}>
@@ -98,9 +137,22 @@ export default function Chat() {
           />
         </div>
         <div className={styles.footerPost}>
-          <div className={styles.btn}>
-            <Send />
-          </div>
+          {message.length === 0 && (
+            <div
+              className={styles.btn}
+              onTouchStart={startListening}
+              onMouseDown={startListening}
+              onTouchEnd={stopListening}
+              onMouseUp={stopListening}
+            >
+              <Mic className={listening ? styles.micActive : ''} />
+            </div>
+          )}
+          {message.length > 0 && (
+            <div className={styles.btn} onClick={handleSendClick}>
+              <Send />
+            </div>
+          )}
         </div>
       </footer>
     </div>
