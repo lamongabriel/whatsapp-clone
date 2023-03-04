@@ -19,15 +19,20 @@ import defaultAvatar from '../../assets/avatar.png';
 import bg from '../../assets/chatBg.png';
 
 import styles from './styles.module.scss';
+import MessageItem from '../MessageItem';
 
 export default function Chat() {
   const [isEmojiOpen, setIsEmojiOpen] = useState(false);
-  const [message, setMessage] = useState('');
+  const [messageToSend, setMessageToSend] = useState('');
+  const [messagesList, setMessagesList] = useState([
+    { text: 'Olá 123' },
+    { text: 'Olá 123' },
+    { text: 'Olá 123' },
+  ]);
 
   const {
     transcript,
     listening,
-    resetTranscript,
     browserSupportsSpeechRecognition,
     isMicrophoneAvailable,
   } = useSpeechRecognition();
@@ -41,7 +46,7 @@ export default function Chat() {
   }
 
   function handleEmojiClick(data: EmojiClickData) {
-    setMessage(message + data.emoji);
+    setMessageToSend(messageToSend + data.emoji);
   }
 
   function handleSendClick() {
@@ -69,7 +74,7 @@ export default function Chat() {
   }
 
   useEffect(() => {
-    setMessage(transcript);
+    setMessageToSend(transcript);
   }, [transcript]);
 
   return (
@@ -99,7 +104,9 @@ export default function Chat() {
         className={styles.chatBody}
         style={{ backgroundImage: `url(${bg.src})` }}
       >
-        ...
+        {messagesList.map((message, index) => (
+          <MessageItem message={message.text} key={index} />
+        ))}
       </div>
       <div
         className={styles.emojiPicker}
@@ -132,12 +139,12 @@ export default function Chat() {
           <input
             type="text"
             placeholder="Type a message"
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
+            value={messageToSend}
+            onChange={(e) => setMessageToSend(e.target.value)}
           />
         </div>
         <div className={styles.footerPost}>
-          {message.length === 0 && (
+          {messageToSend.length === 0 && (
             <div
               className={styles.btn}
               onTouchStart={startListening}
@@ -148,7 +155,7 @@ export default function Chat() {
               <Mic className={listening ? styles.micActive : ''} />
             </div>
           )}
-          {message.length > 0 && (
+          {messageToSend.length > 0 && (
             <div className={styles.btn} onClick={handleSendClick}>
               <Send />
             </div>
