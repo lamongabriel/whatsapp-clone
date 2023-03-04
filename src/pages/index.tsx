@@ -11,6 +11,7 @@ import defaultAvatar from '../assets/avatar.png';
 
 import { ChatType } from '@/typings/Chat';
 import { User } from '@/typings/User';
+import NewChatMenu from '@/components/NewChatMenu';
 
 export default function Home() {
   const [chatList] = useState<ChatType[]>([
@@ -26,9 +27,25 @@ export default function Home() {
     email: 'gabriel-lamon@outlook.com',
   });
 
+  const [showNewChat, setShowNewChat] = useState(false);
+
+  function handleOpenNewChatMenu() {
+    setShowNewChat(true);
+  }
+
+  function handleCloseNewChatMenu() {
+    setShowNewChat(false);
+  }
+
   return (
     <main className={styles.main}>
       <div className={styles.appWindow}>
+        <NewChatMenu
+          user={user}
+          chatList={chatList}
+          visible={showNewChat}
+          onClose={handleCloseNewChatMenu}
+        />
         <aside className={styles.appSideBar}>
           <header className={styles.sideBarHeader}>
             <Image
@@ -41,8 +58,8 @@ export default function Home() {
               <div className={styles.headerBtn}>
                 <DonutLarge className={styles.icon} />
               </div>
-              <div className={styles.headerBtn}>
-                <ChatSharp className={styles.icon} />
+              <div className={styles.headerBtn} onClick={handleOpenNewChatMenu}>
+                <ChatSharp className={styles.icon} titleAccess="New Chat" />
               </div>
               <div className={styles.headerBtn}>
                 <MoreVert className={styles.icon} />

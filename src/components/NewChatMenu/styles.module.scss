@@ -1,0 +1,107 @@
+@import '../../styles/utilities/variables';
+
+.newChatMenu {
+  width: 35%;
+  max-width: 26rem;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  background-color: $white;
+
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid $gray-300;
+
+  z-index: 1;
+  transition: left ease-in-out 200ms;
+
+  .newChatHead {
+    display: flex;
+    align-items: center;
+    padding: 3.45rem 1rem 0.8rem 1rem;
+    background-color: $app-drawer-background;
+
+    .newChatBackButton {
+      height: 2rem;
+      width: 2rem;
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      cursor: pointer;
+
+      svg {
+        color: $white;
+      }
+    }
+
+    .newChatTitle {
+      h2 {
+        color: $white;
+        font-size: 1.1875rem;
+        height: 2.5rem;
+        line-height: 2.5rem;
+        flex: 1;
+        font-weight: 500;
+        margin-left: 1.2rem;
+      }
+    }
+  }
+
+  .newChatList {
+    flex: 1;
+    overflow-y: auto;
+
+    .newChatContact {
+      display: flex;
+      align-items: center;
+      padding: 1rem;
+      cursor: pointer;
+
+      &:hover {
+        background-color: $gray-50;
+      }
+
+      img {
+        border-radius: 100%;
+        margin-right: 1rem;
+
+        width: 3.125rem;
+        height: 3.125rem;
+      }
+
+      div {
+        display: flex;
+        flex-direction: column;
+        flex-wrap: wrap;
+        min-width: 0;
+      }
+
+      h2 {
+        display: flex;
+        flex-grow: 1;
+        overflow: hidden;
+        font-size: 1.0625rem;
+        font-weight: 400;
+        line-height: 1.3125rem;
+        color: $message-item-color;
+        overflow-wrap: break-word;
+      }
+
+      p {
+        flex-grow: 1;
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 20px;
+
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        width: 100%;
+
+        color: $profile-message-color;
+      }
+    }
+  }
+}
