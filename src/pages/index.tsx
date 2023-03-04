@@ -10,6 +10,7 @@ import styles from '../styles/pages/Home.module.scss';
 import defaultAvatar from '../assets/avatar.png';
 
 import { ChatType } from '@/typings/Chat';
+import { User } from '@/typings/User';
 
 export default function Home() {
   const [chatList] = useState<ChatType[]>([
@@ -18,13 +19,24 @@ export default function Home() {
   ]);
 
   const [activeChat, setActiveChat] = useState<ChatType>({} as ChatType);
+  const [user, setUser] = useState<User>({
+    id: '13040-sdasxc34-gosd',
+    avatar: defaultAvatar.src,
+    name: 'Gabriel Lamon Lopes',
+    email: 'gabriel-lamon@outlook.com',
+  });
 
   return (
     <main className={styles.main}>
       <div className={styles.appWindow}>
         <aside className={styles.appSideBar}>
           <header className={styles.sideBarHeader}>
-            <Image src={defaultAvatar} alt="Avatar image" />
+            <Image
+              src={user.avatar}
+              alt="Avatar image"
+              width={40}
+              height={40}
+            />
             <div className={styles.headerButtons}>
               <div className={styles.headerBtn}>
                 <DonutLarge className={styles.icon} />
@@ -57,7 +69,7 @@ export default function Home() {
           </div>
         </aside>
         <div className={styles.appContent}>
-          {activeChat.chatId !== undefined && <Chat />}
+          {activeChat.chatId !== undefined && <Chat user={user} />}
           {activeChat.chatId === undefined && <NoChatSelected />}
         </div>
       </div>

@@ -1,9 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import SpeechRecognition, {
   useSpeechRecognition,
 } from 'react-speech-recognition';
 
+import MessageItem from '../MessageItem';
 import EmojiPicker, { EmojiStyle, EmojiClickData } from 'emoji-picker-react';
 import {
   Search,
@@ -18,17 +19,43 @@ import {
 import defaultAvatar from '../../assets/avatar.png';
 import bg from '../../assets/chatBg.png';
 
-import styles from './styles.module.scss';
-import MessageItem from '../MessageItem';
+import { User } from '@/typings/User';
 
-export default function Chat() {
+import styles from './styles.module.scss';
+import { Message } from '@/typings/Message';
+
+interface ChatProps {
+  user: User;
+}
+
+export default function Chat({ user }: ChatProps) {
   const [isEmojiOpen, setIsEmojiOpen] = useState(false);
   const [messageToSend, setMessageToSend] = useState('');
-  const [messagesList, setMessagesList] = useState([
-    { text: 'Olá 123' },
-    { text: 'Olá 123' },
-    { text: 'Olá 123' },
+  const [messagesList, setMessagesList] = useState<Message[]>([
+    { author: '123', body: 'Olá 123', date: '19:00' },
+    { author: '13040-sdasxc34-gosd', body: 'Olá 123', date: '19:00' },
+    { author: '12345', body: 'Olá 123', date: '19:00' },
+    { author: '123', body: 'Olá 123', date: '19:00' },
+    { author: '13040-sdasxc34-gosd', body: 'Olá 123', date: '19:00' },
+    { author: '12345', body: 'Olá 123', date: '19:00' },
+    { author: '123', body: 'Olá 123', date: '19:00' },
+    { author: '13040-sdasxc34-gosd', body: 'Olá 123', date: '19:00' },
+    { author: '12345', body: 'Olá 123', date: '19:00' },
+    { author: '123', body: 'Olá 123', date: '19:00' },
+    { author: '13040-sdasxc34-gosd', body: 'Olá 123', date: '19:00' },
+    { author: '12345', body: 'Olá 123', date: '19:00' },
+    { author: '123', body: 'Olá 123', date: '19:00' },
+    { author: '13040-sdasxc34-gosd', body: 'Olá 123', date: '19:00' },
+    { author: '12345', body: 'Olá 123', date: '19:00' },
+    { author: '123', body: 'Olá 123', date: '19:00' },
+    { author: '13040-sdasxc34-gosd', body: 'Olá 123', date: '19:00' },
+    { author: '12345', body: 'Olá 123', date: '19:00' },
+    { author: '123', body: 'Olá 123', date: '19:00' },
+    { author: '13040-sdasxc34-gosd', body: 'Olá 123', date: '19:00' },
+    { author: '12345', body: 'Olá 123', date: '19:00' },
   ]);
+
+  const chatBodyRef = useRef<HTMLDivElement>(null);
 
   const {
     transcript,
@@ -77,6 +104,16 @@ export default function Chat() {
     setMessageToSend(transcript);
   }, [transcript]);
 
+  useEffect(() => {
+    const body = chatBodyRef.current;
+
+    if (!body) return;
+
+    if (body.scrollHeight > body.offsetHeight) {
+      body.scrollTop = body.scrollHeight - body.offsetHeight;
+    }
+  }, [messagesList]);
+
   return (
     <div className={styles.chatWindow}>
       <header className={styles.chatHeader}>
@@ -102,10 +139,11 @@ export default function Chat() {
       </header>
       <div
         className={styles.chatBody}
+        ref={chatBodyRef}
         style={{ backgroundImage: `url(${bg.src})` }}
       >
         {messagesList.map((message, index) => (
-          <MessageItem message={message.text} key={index} />
+          <MessageItem user={user} message={message} key={index} />
         ))}
       </div>
       <div

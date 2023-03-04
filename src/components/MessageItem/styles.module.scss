@@ -1,34 +1,49 @@
 @import '../../styles/utilities/variables';
 
-.messageLine {
+.messageLineCurrentUser {
   margin-bottom: 0.6rem;
   display: flex;
+  justify-content: flex-end;
 
   .messageItem {
-    padding: 0.375rem 0.5rem 0.5rem 0.5rem;
-    border-radius: 0.5rem;
-    max-width: 75%;
-    position: relative;
-    flex: none;
-    font-size: 0.9rem;
-    line-height: 1.2rem;
-    color: $message-item-color;
     background-color: $message-item-background;
-
-    display: flex;
-    flex-direction: column;
   }
+}
 
-  .messageText {
-    margin: 0.3125rem 2.5rem 0.3125rem 0.3125rem;
-  }
+.messageLineOtherUser {
+  display: flex;
+  margin-bottom: 0.6rem;
+  justify-content: flex-start;
 
-  .messageDate {
-    font-size: 0.6875rem;
-    color: $message-date-color;
-    margin-right: 0.4rem;
-    text-align: right;
-    height: 1rem;
-    margin-top: -1rem;
+  .messageItem {
+    background-color: $incoming-message-item-background;
   }
+}
+
+.messageItem {
+  box-shadow: 0 1px 0.5px rgba(11, 20, 26, 0.13);
+  padding: 0.375rem 0.5rem 0.5rem 0.5rem;
+  border-radius: 0.5rem;
+  max-width: 75%;
+  position: relative;
+  flex: none;
+  font-size: 0.9rem;
+  line-height: 1.2rem;
+  color: $message-item-color;
+
+  display: flex;
+  flex-direction: column;
+}
+
+.messageText {
+  margin: 0 2.5rem 0 0.2rem;
+}
+
+.messageDate {
+  font-size: 0.6875rem;
+  color: $message-date-color;
+  margin-right: 0.4rem;
+  text-align: right;
+  height: 1rem;
+  margin-top: -1rem;
 }
