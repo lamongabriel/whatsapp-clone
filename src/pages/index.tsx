@@ -1,9 +1,10 @@
-import { Fragment, useState } from 'react';
+import { useState } from 'react';
 import Image from 'next/image';
 
 import ChatListItem from '@/components/ChatListItem';
 import NoChatSelected from '@/components/NoChatSelected';
 import Chat from '@/components/Chat';
+import NewChatMenu from '@/components/NewChatMenu';
 import { DonutLarge, ChatSharp, MoreVert, Search } from '@mui/icons-material';
 
 import styles from '../styles/pages/Home.module.scss';
@@ -11,7 +12,6 @@ import defaultAvatar from '../assets/avatar.png';
 
 import { ChatType } from '@/typings/Chat';
 import { User } from '@/typings/User';
-import NewChatMenu from '@/components/NewChatMenu';
 
 export default function Home() {
   const [chatList] = useState<ChatType[]>([
