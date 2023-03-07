@@ -1,7 +1,10 @@
+import { ChatType } from '@/typings/Chat';
 import { User } from '@/typings/User';
 import { initializeApp } from 'firebase/app';
 import { FacebookAuthProvider, signInWithPopup, getAuth } from 'firebase/auth';
+
 import {
+  onSnapshot,
   getFirestore,
   collection,
   doc,
@@ -10,7 +13,7 @@ import {
   addDoc,
   updateDoc,
   arrayUnion,
-} from 'firebase/firestore/lite';
+} from 'firebase/firestore';
 
 export const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -32,6 +35,7 @@ export default {
 
     return signInWithPopup(auth, provider);
   },
+
   // Adds user to db, if it exists, it merges, resulting in one user only
   addUserToDb: async (user: User) => {
     await setDoc(
@@ -44,6 +48,7 @@ export default {
       { merge: true }
     );
   },
+
   // Gets every contact logged to the app
   getContactList: async (userId: string) => {
     const contactList = [] as User[];
@@ -65,6 +70,7 @@ export default {
 
     return contactList;
   },
+
   // Handles new chat addition
   addNewChat: async (user1: User, user2: User) => {
     // Creates a new empty chat in the collections chats
@@ -99,6 +105,18 @@ export default {
         image: user1.avatar,
         with: user1.id,
       }),
+    });
+  },
+
+  onChatList: (userId: string, setChatList: (chats: ChatType[]) => void) => {
+    return onSnapshot(doc(collection(db, 'users'), userId), (doc) => {
+      if (doc.exists()) {
+        const data = doc.data();
+
+        if (data.chats) {
+          setChatList(data.chats);
+        }
+      }
     });
   },
 };

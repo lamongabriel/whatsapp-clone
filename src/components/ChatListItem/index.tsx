@@ -1,7 +1,6 @@
 import Image from 'next/image';
 import styles from './styles.module.scss';
 
-import defaultAvatar from '../../assets/avatar.png';
 import { ChatType } from '@/typings/Chat';
 
 interface ChatListItemProps {
@@ -21,14 +20,16 @@ export default function ChatListItem({
       onClick={onClick}
     >
       <Image
-        src={defaultAvatar}
+        src={data.image}
         className={styles.chatListAvatar}
         alt="Avatar item"
+        width={50}
+        height={50}
       />
       <div className={styles.chatListLines}>
         <div className={styles.chatListLine}>
           <div>{data.title}</div>
-          <time>09:38</time>
+          <time>{data.title}</time>
         </div>
         <div className={styles.chatListLine}>
           <div className={styles.chatListMessage}>

@@ -12,11 +12,12 @@ import styles from '../styles/pages/Home.module.scss';
 
 import { ChatType } from '@/typings/Chat';
 import { useAppSelector } from '@/redux/hooks';
+import firebase from '@/config/firebase';
 
 export default function Home() {
   const user = useAppSelector((state) => state.user)?.user;
 
-  const [chatList] = useState<ChatType[]>([]);
+  const [chatList, setChatList] = useState<ChatType[]>([]);
 
   const [activeChat, setActiveChat] = useState<ChatType>({} as ChatType);
   const [showNewChat, setShowNewChat] = useState(false);
@@ -32,6 +33,10 @@ export default function Home() {
   useEffect(() => {
     if (!user?.id) {
       Router.push('/login');
+    } else {
+      const unsub = firebase.onChatList(user.id, setChatList);
+
+      return unsub;
     }
   }, [user]);
 
