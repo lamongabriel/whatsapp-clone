@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Image from 'next/image';
+import Router from 'next/router';
 
 import ChatListItem from '@/components/ChatListItem';
 import NoChatSelected from '@/components/NoChatSelected';
@@ -8,25 +9,19 @@ import NewChatMenu from '@/components/NewChatMenu';
 import { DonutLarge, ChatSharp, MoreVert, Search } from '@mui/icons-material';
 
 import styles from '../styles/pages/Home.module.scss';
-import defaultAvatar from '../assets/avatar.png';
 
 import { ChatType } from '@/typings/Chat';
-import { User } from '@/typings/User';
+import { useAppSelector } from '@/redux/hooks';
 
 export default function Home() {
+  const user = useAppSelector((state) => state.user)?.user;
+
   const [chatList] = useState<ChatType[]>([
     { chatId: 's45tgc-4cxvghh6-zcz4hg', title: 'Chat 1' },
     { chatId: '0xvccv-d29tvaax-fmmv38', title: 'Chat 2' },
   ]);
 
   const [activeChat, setActiveChat] = useState<ChatType>({} as ChatType);
-  const [user, setUser] = useState<User>({
-    id: '13040-sdasxc34-gosd',
-    avatar: defaultAvatar.src,
-    name: 'Gabriel Lamon Lopes',
-    email: 'gabriel-lamon@outlook.com',
-  });
-
   const [showNewChat, setShowNewChat] = useState(false);
 
   function handleOpenNewChatMenu() {
@@ -36,6 +31,12 @@ export default function Home() {
   function handleCloseNewChatMenu() {
     setShowNewChat(false);
   }
+
+  useEffect(() => {
+    if (!user?.id) {
+      Router.push('/login');
+    }
+  }, [user]);
 
   return (
     <main className={styles.main}>
@@ -49,7 +50,7 @@ export default function Home() {
         <aside className={styles.appSideBar}>
           <header className={styles.sideBarHeader}>
             <Image
-              src={user.avatar}
+              src={user?.avatar ?? ''}
               alt="Avatar image"
               width={40}
               height={40}

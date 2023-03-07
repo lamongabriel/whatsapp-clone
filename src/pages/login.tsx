@@ -1,10 +1,45 @@
-import { FacebookRounded } from '@mui/icons-material';
+import { useState } from 'react';
+import Router from 'next/router';
 import Image from 'next/image';
 
+import firebase from '@/config/firebase';
+import { useAppDispatch, useAppSelector } from '@/redux/hooks';
+import { setUser } from '@/redux/slices/user';
+
+import { FacebookRounded, Warning } from '@mui/icons-material';
 import whatsAppSVG from '../assets/whatsApp.svg';
 import styles from '../styles/pages/login.module.scss';
 
 export default function Login() {
+  const [err, setErr] = useState(false);
+
+  const dispatch = useAppDispatch();
+  const user = useAppSelector((state) => state.user).user;
+
+  async function handleFacebookLogin() {
+    setErr(false);
+
+    try {
+      const result = await firebase.fbPopup();
+
+      if (result) {
+        const user = {
+          name: result.user.displayName,
+          email: result.user.email,
+          id: result.user.uid,
+          avatar: result.user.photoURL,
+        };
+
+        dispatch(setUser(user));
+        Router.push('/');
+      } else {
+        setErr(true);
+      }
+    } catch (err) {
+      setErr(true);
+    }
+  }
+
   return (
     <main className={styles.login}>
       <div className={styles.greenWrapper}>.</div>
@@ -20,12 +55,24 @@ export default function Login() {
               <li>Login and use</li>
             </ol>
 
-            <button>
+            <button onClick={handleFacebookLogin}>
               <FacebookRounded /> Continue with Facebook
             </button>
+
+            {err && (
+              <div className={styles.err}>
+                <Warning fontSize="small" /> Error logging in, please try again.
+              </div>
+            )}
           </div>
           <div>
-            <Image src={whatsAppSVG} alt="WhatsApp" height={264} width={264} />
+            <Image
+              src={whatsAppSVG}
+              priority
+              alt="WhatsApp"
+              height={264}
+              width={264}
+            />
           </div>
         </div>
         <footer className={styles.whiteBoxFooter}></footer>
