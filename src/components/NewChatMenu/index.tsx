@@ -34,6 +34,12 @@ export default function NewChatMenu({ visible, onClose }: NewChatMenuProps) {
     getContactList();
   }, []);
 
+  async function handleAddChat(userToChat: User) {
+    await firebase.addNewChat(user, userToChat);
+
+    onClose();
+  }
+
   if (contactList.length === 0) {
     return null;
   }
@@ -50,7 +56,11 @@ export default function NewChatMenu({ visible, onClose }: NewChatMenuProps) {
       </div>
       <div className={styles.newChatList}>
         {contactList.map((contact, index) => (
-          <div className={styles.newChatContact} key={index}>
+          <div
+            className={styles.newChatContact}
+            key={index}
+            onClick={() => handleAddChat(contact)}
+          >
             <Image
               src={contact.avatar as string}
               alt={contact.name as string}
