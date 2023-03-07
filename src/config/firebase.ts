@@ -1,7 +1,13 @@
 import { User } from '@/typings/User';
 import { initializeApp } from 'firebase/app';
 import { FacebookAuthProvider, signInWithPopup, getAuth } from 'firebase/auth';
-import { getFirestore, collection, doc, setDoc } from 'firebase/firestore/lite';
+import {
+  getFirestore,
+  collection,
+  doc,
+  setDoc,
+  getDocs,
+} from 'firebase/firestore/lite';
 
 export const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY as string,
@@ -29,8 +35,28 @@ export default {
       {
         name: user.name,
         avatar: user.avatar,
+        email: user.email,
       },
       { merge: true }
     );
+  },
+  getContactList: async (userId: string) => {
+    const contactList = [] as User[];
+
+    const contactsData = await getDocs(collection(db, 'users'));
+    contactsData.forEach((contact) => {
+      const data = contact.data();
+
+      if (contact.id !== userId) {
+        contactList.push({
+          id: contact.id,
+          name: data.name,
+          avatar: data.avatar,
+          email: data.email,
+        });
+      }
+    });
+
+    return contactList;
   },
 };

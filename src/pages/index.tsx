@@ -16,10 +16,7 @@ import { useAppSelector } from '@/redux/hooks';
 export default function Home() {
   const user = useAppSelector((state) => state.user)?.user;
 
-  const [chatList] = useState<ChatType[]>([
-    { chatId: 's45tgc-4cxvghh6-zcz4hg', title: 'Chat 1' },
-    { chatId: '0xvccv-d29tvaax-fmmv38', title: 'Chat 2' },
-  ]);
+  const [chatList] = useState<ChatType[]>([]);
 
   const [activeChat, setActiveChat] = useState<ChatType>({} as ChatType);
   const [showNewChat, setShowNewChat] = useState(false);

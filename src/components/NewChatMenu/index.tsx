@@ -1,8 +1,10 @@
+import firebase from '@/config/firebase';
+import { useAppSelector } from '@/redux/hooks';
 import { ChatType } from '@/typings/Chat';
 import { User } from '@/typings/User';
 import { ArrowBack } from '@mui/icons-material';
 import Image from 'next/image';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import styles from './styles.module.scss';
 
 interface NewChatMenuProps {
@@ -13,34 +15,28 @@ interface NewChatMenuProps {
 }
 
 export default function NewChatMenu({ visible, onClose }: NewChatMenuProps) {
-  const [contactList, setContactList] = useState([
-    {
-      id: 'asdsa34-zxczxt53-5osdcbv-xka',
-      avatar:
-        'https://pps.whatsapp.net/v/t61.24694-24/311028478_1398919310844779_8768775314489018039_n.jpg?stp=dst-jpg_s96x96&ccb=11-4&oh=01_AdS9MwZgo-TvMAidNABX7kltEUAp8e9tjX3nVdBQU1rFUw&oe=6410A587',
-      name: 'Gabriel Lamon',
-    },
-    {
-      id: 'asdsa34-zxczxt53-5osdcbv-xka',
-      avatar:
-        'https://pps.whatsapp.net/v/t61.24694-24/311028478_1398919310844779_8768775314489018039_n.jpg?stp=dst-jpg_s96x96&ccb=11-4&oh=01_AdS9MwZgo-TvMAidNABX7kltEUAp8e9tjX3nVdBQU1rFUw&oe=6410A587',
-      name: 'Gabriel Lamon',
-    },
-    {
-      id: 'asdsa34-zxczxt53-5osdcbv-xka',
-      avatar:
-        'https://pps.whatsapp.net/v/t61.24694-24/311028478_1398919310844779_8768775314489018039_n.jpg?stp=dst-jpg_s96x96&ccb=11-4&oh=01_AdS9MwZgo-TvMAidNABX7kltEUAp8e9tjX3nVdBQU1rFUw&oe=6410A587',
-      name: 'Gabriel Lamon',
-    },
-    {
-      id: 'asdsa34-zxczxt53-5osdcbv-xka',
-      avatar:
-        'https://pps.whatsapp.net/v/t61.24694-24/311028478_1398919310844779_8768775314489018039_n.jpg?stp=dst-jpg_s96x96&ccb=11-4&oh=01_AdS9MwZgo-TvMAidNABX7kltEUAp8e9tjX3nVdBQU1rFUw&oe=6410A587',
-      name: 'Gabriel Lamon',
-    },
-  ]);
+  const [contactList, setContactList] = useState<User[]>([] as User[]);
+  const user = useAppSelector((state) => state.user)?.user;
 
   const newChatMenuStyles = { left: visible ? 0 : '-26rem' };
+
+  useEffect(() => {
+    const getContactList = async () => {
+      if (!user?.id) {
+        return;
+      }
+
+      const contacts = await firebase.getContactList(user.id);
+
+      setContactList(contacts);
+    };
+
+    getContactList();
+  }, []);
+
+  if (contactList.length === 0) {
+    return null;
+  }
 
   return (
     <div className={styles.newChatMenu} style={newChatMenuStyles}>
@@ -56,8 +52,8 @@ export default function NewChatMenu({ visible, onClose }: NewChatMenuProps) {
         {contactList.map((contact, index) => (
           <div className={styles.newChatContact} key={index}>
             <Image
-              src={contact.avatar}
-              alt={contact.name}
+              src={contact.avatar as string}
+              alt={contact.name as string}
               width={50}
               height={50}
             />
