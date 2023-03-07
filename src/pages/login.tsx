@@ -31,6 +31,9 @@ export default function Login() {
         };
 
         dispatch(setUser(user));
+
+        await firebase.addUserToDb(user);
+
         Router.push('/');
       } else {
         setErr(true);

@@ -1,6 +1,7 @@
+import { User } from '@/typings/User';
 import { initializeApp } from 'firebase/app';
 import { FacebookAuthProvider, signInWithPopup, getAuth } from 'firebase/auth';
-import { getFirestore } from 'firebase/firestore/lite';
+import { getFirestore, collection, doc, setDoc } from 'firebase/firestore/lite';
 
 export const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY as string,
@@ -21,5 +22,15 @@ export default {
     const auth = getAuth(app);
 
     return signInWithPopup(auth, provider);
+  },
+  addUserToDb: async (user: User) => {
+    await setDoc(
+      doc(collection(db, 'users'), user.id as string),
+      {
+        name: user.name,
+        avatar: user.avatar,
+      },
+      { merge: true }
+    );
   },
 };
