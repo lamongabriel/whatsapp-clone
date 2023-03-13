@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { use, useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import SpeechRecognition, {
   useSpeechRecognition,
@@ -16,44 +16,25 @@ import {
   Close,
 } from '@mui/icons-material';
 
-import defaultAvatar from '../../assets/avatar.png';
 import bg from '../../assets/chatBg.png';
+import styles from './styles.module.scss';
 
 import { User } from '@/typings/User';
-
-import styles from './styles.module.scss';
 import { Message } from '@/typings/Message';
+import { ChatType } from '@/typings/Chat';
+import firebase from '@/config/firebase';
 
 interface ChatProps {
   user: User;
+  data: ChatType;
 }
 
-export default function Chat({ user }: ChatProps) {
+export default function Chat({ user, data }: ChatProps) {
   const [isEmojiOpen, setIsEmojiOpen] = useState(false);
   const [messageToSend, setMessageToSend] = useState('');
-  const [messagesList, setMessagesList] = useState<Message[]>([
-    { author: '123', body: 'Olá 123', date: '19:00' },
-    { author: '13040-sdasxc34-gosd', body: 'Olá 123', date: '19:00' },
-    { author: '12345', body: 'Olá 123', date: '19:00' },
-    { author: '123', body: 'Olá 123', date: '19:00' },
-    { author: '13040-sdasxc34-gosd', body: 'Olá 123', date: '19:00' },
-    { author: '12345', body: 'Olá 123', date: '19:00' },
-    { author: '123', body: 'Olá 123', date: '19:00' },
-    { author: '13040-sdasxc34-gosd', body: 'Olá 123', date: '19:00' },
-    { author: '12345', body: 'Olá 123', date: '19:00' },
-    { author: '123', body: 'Olá 123', date: '19:00' },
-    { author: '13040-sdasxc34-gosd', body: 'Olá 123', date: '19:00' },
-    { author: '12345', body: 'Olá 123', date: '19:00' },
-    { author: '123', body: 'Olá 123', date: '19:00' },
-    { author: '13040-sdasxc34-gosd', body: 'Olá 123', date: '19:00' },
-    { author: '12345', body: 'Olá 123', date: '19:00' },
-    { author: '123', body: 'Olá 123', date: '19:00' },
-    { author: '13040-sdasxc34-gosd', body: 'Olá 123', date: '19:00' },
-    { author: '12345', body: 'Olá 123', date: '19:00' },
-    { author: '123', body: 'Olá 123', date: '19:00' },
-    { author: '13040-sdasxc34-gosd', body: 'Olá 123', date: '19:00' },
-    { author: '12345', body: 'Olá 123', date: '19:00' },
-  ]);
+
+  const [messagesList, setMessagesList] = useState<Message[]>([]);
+  const [users, setUsers] = useState<string[]>([]);
 
   const chatBodyRef = useRef<HTMLDivElement>(null);
 
@@ -77,7 +58,18 @@ export default function Chat({ user }: ChatProps) {
   }
 
   function handleSendClick() {
-    console.log('click');
+    if (messageToSend === '' || messageToSend.length === 0 || !user.id) return;
+
+    firebase.sendMessage(data, user.id, 'text', messageToSend, users);
+
+    setMessageToSend('');
+    setIsEmojiOpen(false);
+  }
+
+  function handleInputKeyup(e: React.KeyboardEvent<HTMLInputElement>) {
+    if (e.key === 'Enter') {
+      handleSendClick();
+    }
   }
 
   function startListening() {
@@ -114,16 +106,32 @@ export default function Chat({ user }: ChatProps) {
     }
   }, [messagesList]);
 
+  useEffect(() => {
+    setMessagesList([]);
+
+    const unsub = firebase.onChatContent(
+      data.chatId,
+      setMessagesList,
+      setUsers
+    );
+
+    return unsub;
+  }, [data.chatId]);
+
   return (
     <div className={styles.chatWindow}>
       <header className={styles.chatHeader}>
         <div className={styles.headerInfo}>
           <Image
-            src={defaultAvatar}
+            src={data.image}
+            width={40}
+            height={40}
             className={styles.headerAvatar}
             alt="Avatar item"
           />
-          <div className={styles.headerName}>Gabriel Lamon Lopes</div>
+          <div className={styles.headerName}>
+            {data.title} - {data.chatId}
+          </div>
         </div>
         <div className={styles.buttons}>
           <div className={styles.btn}>
@@ -179,6 +187,7 @@ export default function Chat({ user }: ChatProps) {
             placeholder="Type a message"
             value={messageToSend}
             onChange={(e) => setMessageToSend(e.target.value)}
+            onKeyUp={handleInputKeyup}
           />
         </div>
         <div className={styles.footerPost}>

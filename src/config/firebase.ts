@@ -1,5 +1,3 @@
-import { ChatType } from '@/typings/Chat';
-import { User } from '@/typings/User';
 import { initializeApp } from 'firebase/app';
 import { FacebookAuthProvider, signInWithPopup, getAuth } from 'firebase/auth';
 
@@ -13,7 +11,12 @@ import {
   addDoc,
   updateDoc,
   arrayUnion,
+  getDoc,
 } from 'firebase/firestore';
+
+import { ChatType } from '@/typings/Chat';
+import { User } from '@/typings/User';
+import { Message } from '@/typings/Message';
 
 export const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -82,7 +85,7 @@ export default {
     // Adds newly created chat to this user active chats
 
     // USER 1
-    updateDoc(doc(collection(db, 'users'), user1.id as string), {
+    await updateDoc(doc(collection(db, 'users'), user1.id as string), {
       chats: arrayUnion({
         chatId: newChat.id,
         // Title of the chat is the name of the
@@ -98,7 +101,7 @@ export default {
     });
 
     // USER 2
-    updateDoc(doc(collection(db, 'users'), user2.id as string), {
+    await updateDoc(doc(collection(db, 'users'), user2.id as string), {
       chats: arrayUnion({
         chatId: newChat.id,
         title: user1.name,
@@ -118,5 +121,64 @@ export default {
         }
       }
     });
+  },
+
+  onChatContent: (
+    chatId: string,
+    setMessagesList: (messageList: Message[]) => void,
+    setUsers: (users: string[]) => void
+  ) => {
+    onSnapshot(doc(collection(db, 'chats'), chatId), (doc) => {
+      if (doc.exists()) {
+        const data = doc.data();
+
+        setMessagesList(data.messages);
+        setUsers(data.users);
+      }
+    });
+  },
+
+  sendMessage: async (
+    chat: ChatType,
+    userId: string,
+    type: string,
+    message: string,
+    users: string[]
+  ) => {
+    const now = new Date().toLocaleString();
+
+    updateDoc(doc(collection(db, 'chats'), chat.chatId), {
+      messages: arrayUnion({
+        type,
+        author: userId,
+        body: message,
+        date: now,
+      }),
+    });
+
+    for (const user of users) {
+      const thisUser = await getDoc(doc(collection(db, 'users'), user));
+
+      const userData = thisUser.data();
+
+      console.log(userData);
+
+      if (!userData) return;
+
+      if (userData.chats) {
+        const chats = [...userData.chats];
+
+        for (const userChat of chats) {
+          if (userChat.chatId === chat.chatId) {
+            userChat.lastMessage = message;
+            userChat.lastMessageDate = now;
+          }
+        }
+
+        await updateDoc(doc(collection(db, 'users'), user), {
+          chats,
+        });
+      }
+    }
   },
 };

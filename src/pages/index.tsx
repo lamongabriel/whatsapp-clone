@@ -89,7 +89,9 @@ export default function Home() {
           </div>
         </aside>
         <div className={styles.appContent}>
-          {activeChat.chatId !== undefined && <Chat user={user} />}
+          {activeChat.chatId !== undefined && (
+            <Chat user={user} data={activeChat} />
+          )}
           {activeChat.chatId === undefined && <NoChatSelected />}
         </div>
       </div>

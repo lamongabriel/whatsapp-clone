@@ -2,6 +2,7 @@ import Image from 'next/image';
 import styles from './styles.module.scss';
 
 import { ChatType } from '@/typings/Chat';
+import { formatDate } from '@/utils/formatDate';
 
 interface ChatListItemProps {
   onClick: () => void;
@@ -29,14 +30,11 @@ export default function ChatListItem({
       <div className={styles.chatListLines}>
         <div className={styles.chatListLine}>
           <div>{data.title}</div>
-          <time>{data.title}</time>
+          <time>{formatDate(data.lastMessageDate)}</time>
         </div>
         <div className={styles.chatListLine}>
           <div className={styles.chatListMessage}>
-            <p>
-              event - compiled client and server successfully in 726 ms (11167
-              modules)
-            </p>
+            <p>{data.lastMessage}</p>
           </div>
         </div>
       </div>

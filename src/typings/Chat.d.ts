@@ -3,4 +3,6 @@ export interface ChatType {
   title: string;
   image: string;
   with: string;
+  lastMessage: string;
+  lastMessageDate: string;
 }
