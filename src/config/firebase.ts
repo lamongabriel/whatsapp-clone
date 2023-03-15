@@ -117,7 +117,24 @@ export default {
         const data = doc.data();
 
         if (data.chats) {
-          setChatList(data.chats);
+          let chats = [...data.chats] as ChatType[];
+
+          chats.sort((a, b) => {
+            if (!a.lastMessageDate || !b.lastMessageDate) {
+              return 1;
+            }
+
+            const chat1LastMessageTime = new Date(a.lastMessageDate).getTime();
+            const chat2LastMessageTime = new Date(b.lastMessageDate).getTime();
+
+            if (chat1LastMessageTime < chat2LastMessageTime) {
+              return 1;
+            } else {
+              return -1;
+            }
+          });
+
+          setChatList(chats);
         }
       }
     });
@@ -160,8 +177,6 @@ export default {
       const thisUser = await getDoc(doc(collection(db, 'users'), user));
 
       const userData = thisUser.data();
-
-      console.log(userData);
 
       if (!userData) return;
 

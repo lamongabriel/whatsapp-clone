@@ -22,6 +22,8 @@ export default function Login() {
     try {
       const result = await firebase.fbPopup();
 
+      console.log(result);
+
       if (result) {
         const user = {
           name: result.user.displayName,
