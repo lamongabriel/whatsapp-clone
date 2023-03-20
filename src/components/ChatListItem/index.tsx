@@ -30,7 +30,9 @@ export default function ChatListItem({
       <div className={styles.chatListLines}>
         <div className={styles.chatListLine}>
           <div>{data.title}</div>
-          <time>{formatDate(data.lastMessageDate)}</time>
+          <time>
+            {data.lastMessageDate ? formatDate(data.lastMessageDate) : ''}
+          </time>
         </div>
         <div className={styles.chatListLine}>
           <div className={styles.chatListMessage}>

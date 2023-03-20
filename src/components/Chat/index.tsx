@@ -129,9 +129,7 @@ export default function Chat({ user, data }: ChatProps) {
             className={styles.headerAvatar}
             alt="Avatar item"
           />
-          <div className={styles.headerName}>
-            {data.title} - {data.chatId}
-          </div>
+          <div className={styles.headerName}>{data.title}</div>
         </div>
         <div className={styles.buttons}>
           <div className={styles.btn}>

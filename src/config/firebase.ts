@@ -76,6 +76,28 @@ export default {
 
   // Handles new chat addition
   addNewChat: async (user1: User, user2: User) => {
+    if (!user1.id || !user2.id) return;
+
+    console.log('foi');
+
+    // Checks if this chat already exist
+    const userDoc = await getDoc(doc(collection(db, 'users'), user1.id));
+    const userChats = userDoc.data()?.chats;
+
+    let doesChatAlreadyExist = false;
+
+    userChats?.forEach((chat: any) => {
+      console.log(chat.with === user2.id);
+
+      if (chat.with === user2.id) {
+        doesChatAlreadyExist = true;
+      }
+    });
+
+    if (doesChatAlreadyExist) {
+      return;
+    }
+
     // Creates a new empty chat in the collections chats
     const newChat = await addDoc(collection(db, 'chats'), {
       messages: [],
