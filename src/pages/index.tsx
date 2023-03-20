@@ -13,6 +13,7 @@ import styles from '../styles/pages/Home.module.scss';
 import { ChatType } from '@/typings/Chat';
 import { useAppSelector } from '@/redux/hooks';
 import firebase from '@/config/firebase';
+import Head from 'next/head';
 
 export default function Home() {
   const user = useAppSelector((state) => state.user)?.user;
@@ -42,6 +43,9 @@ export default function Home() {
 
   return (
     <main className={styles.main}>
+      <Head>
+        <title>WhatsApp - {user?.name}</title>
+      </Head>
       <div className={styles.appWindow}>
         <NewChatMenu
           user={user}
