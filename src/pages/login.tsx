@@ -8,7 +8,7 @@ import { setUser } from '@/redux/slices/user';
 
 import { FacebookRounded, Warning } from '@mui/icons-material';
 import whatsAppSVG from '../assets/whatsApp.svg';
-import styles from '../styles/pages/login.module.scss';
+import styles from '../styles/pages/Login.module.scss';
 import Head from 'next/head';
 
 export default function Login() {
