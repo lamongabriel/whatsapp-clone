@@ -1,16 +1,16 @@
-export function formatDate(dt: string) {
-  const date = new Date(dt);
+export function formatDate(dateToFormat: string | Date) {
+  const date = new Date(dateToFormat)
 
-  let hours = date.getHours();
-  let minutes = date.getMinutes() as string | number;
+  const hours24 = date.getHours()
+  const minutesOneDigit = date.getMinutes()
 
-  let ampm = hours >= 12 ? 'PM' : 'AM';
+  const ampm = hours24 >= 12 ? 'PM' : 'AM'
 
-  hours = hours % 12;
-  hours = hours ? hours : 12;
-  minutes = minutes < 10 ? '0' + minutes : minutes;
+  const hours12 = hours24 % 12 || 12
+  const minutesTwoDigits =
+    minutesOneDigit < 10 ? '0' + minutesOneDigit : minutesOneDigit
 
-  const strTime = hours + ':' + minutes + ' ' + ampm;
+  const time = hours12 + ':' + minutesTwoDigits + ' ' + ampm
 
-  return strTime;
+  return time
 }
