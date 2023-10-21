@@ -1,74 +1,82 @@
-import { useState } from 'react';
-import Router from 'next/router';
-import Image from 'next/image';
+// React Modules
+import { useState } from 'react'
 
-import firebase from '@/config/firebase';
-import { useAppDispatch, useAppSelector } from '@/redux/hooks';
-import { setUser } from '@/redux/slices/user';
+// NEXT Modules
+import Router from 'next/router'
+import Image from 'next/image'
+import Head from 'next/head'
 
-import { FacebookRounded, Warning } from '@mui/icons-material';
-import whatsAppSVG from '../assets/whatsApp.svg';
-import styles from '../styles/pages/Login.module.scss';
-import Head from 'next/head';
+// Firebase
+import { FirebaseService } from '@/services/firebaseService'
+
+// Redux
+import { useAppDispatch } from '@/redux/hooks/useAppDispatch'
+import { setUser } from '@/redux/slices/user'
+
+// Styles and icons
+import { GitHub, Warning } from '@mui/icons-material'
+import whatsAppSVG from '../assets/whatsApp.svg'
+import styles from '../styles/pages/Login.module.scss'
 
 export default function Login() {
-  const [err, setErr] = useState(false);
+  const [error, setError] = useState(false)
 
-  const dispatch = useAppDispatch();
-  const user = useAppSelector((state) => state.user).user;
+  const firebase = new FirebaseService()
+
+  const dispatch = useAppDispatch()
 
   async function handleFacebookLogin() {
-    setErr(false);
+    setError(false)
 
     try {
-      const result = await firebase.fbPopup();
+      const result = await firebase.loginWithGithub()
 
-      console.log(result);
-
-      if (result) {
+      if (result?.user && result?.token) {
         const user = {
-          name: result.user.displayName,
-          email: result.user.email,
+          name: result.user.displayName ?? 'name',
+          email: result.user.email ?? 'mail',
           id: result.user.uid,
-          avatar: result.user.photoURL,
-        };
+          avatar: result.user.photoURL ?? 'photo',
+        }
 
-        dispatch(setUser(user));
+        dispatch(setUser(user))
 
-        await firebase.addUserToDb(user);
+        await firebase.createNewUser(user)
 
-        Router.push('/');
+        Router.push('/')
       } else {
-        setErr(true);
+        setError(true)
       }
     } catch (err) {
-      setErr(true);
+      console.log(err)
+
+      setError(true)
     }
   }
 
   return (
     <main className={styles.login}>
       <Head>
-        <title>WhatsApp - Login</title>
+        <title>DevChat - Login</title>
       </Head>
       <div className={styles.greenWrapper}>.</div>
       <div className={styles.loginWhiteBox}>
         <div className={styles.whiteBoxInfo}>
           <div>
-            <h1>Use WhatsApp on your computer</h1>
+            <h1>Use DevChat on your computer</h1>
 
             <ol type="1">
-              <li>Open WhatsApp on your phone</li>
-              <li>Open your facebook</li>
+              <li>Open DevChat on your phone</li>
+              <li>Open your GitHub</li>
               <li>Check your login and password</li>
               <li>Login and use</li>
             </ol>
 
             <button onClick={handleFacebookLogin}>
-              <FacebookRounded /> Continue with Facebook
+              <GitHub /> Continue with GitHub
             </button>
 
-            {err && (
+            {error && (
               <div className={styles.err}>
                 <Warning fontSize="small" /> Error logging in, please try again.
               </div>
@@ -87,5 +95,5 @@ export default function Login() {
         <footer className={styles.whiteBoxFooter}></footer>
       </div>
     </main>
-  );
+  )
 }

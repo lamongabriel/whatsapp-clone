@@ -1,11 +1,21 @@
-import { use, useEffect, useRef, useState } from 'react';
-import Image from 'next/image';
+// React Modules
+import { useEffect, useRef, useState } from 'react'
+
+// NEXT modules
+import Image from 'next/image'
+
+// Components
+import MessageItem from '../MessageItem'
+import EmojiPicker, { EmojiStyle, EmojiClickData } from 'emoji-picker-react'
+
+// SpeechRecognition
 import SpeechRecognition, {
   useSpeechRecognition,
-} from 'react-speech-recognition';
+} from 'react-speech-recognition'
 
-import MessageItem from '../MessageItem';
-import EmojiPicker, { EmojiStyle, EmojiClickData } from 'emoji-picker-react';
+// Styles and icons
+import bg from '../../assets/chatBg.png'
+import styles from './styles.module.scss'
 import {
   Search,
   AttachFile,
@@ -14,109 +24,107 @@ import {
   Send,
   Mic,
   Close,
-} from '@mui/icons-material';
+} from '@mui/icons-material'
 
-import bg from '../../assets/chatBg.png';
-import styles from './styles.module.scss';
+// Typings
+import { User } from '@/typings/User'
+import { Message } from '@/typings/Message'
+import { Chat as ChatType } from '@/typings/Chat'
 
-import { User } from '@/typings/User';
-import { Message } from '@/typings/Message';
-import { ChatType } from '@/typings/Chat';
-import firebase from '@/config/firebase';
+// Firebase
+import { FirebaseService } from '@/services/firebaseService'
 
 interface ChatProps {
-  user: User;
-  data: ChatType;
+  user: User
+  data: ChatType
 }
 
 export default function Chat({ user, data }: ChatProps) {
-  const [isEmojiOpen, setIsEmojiOpen] = useState(false);
-  const [messageToSend, setMessageToSend] = useState('');
+  const firebase = new FirebaseService()
 
-  const [messagesList, setMessagesList] = useState<Message[]>([]);
-  const [users, setUsers] = useState<string[]>([]);
+  const [isEmojiOpen, setIsEmojiOpen] = useState(false)
+  const [messageToSend, setMessageToSend] = useState('')
 
-  const chatBodyRef = useRef<HTMLDivElement>(null);
+  const [messagesList, setMessagesList] = useState<Message[]>([])
+  const [users, setUsers] = useState<string[]>([])
+
+  const chatBodyRef = useRef<HTMLDivElement>(null)
 
   const {
     transcript,
     listening,
     browserSupportsSpeechRecognition,
     isMicrophoneAvailable,
-  } = useSpeechRecognition();
+  } = useSpeechRecognition()
 
   function handleOpenEmoji() {
-    setIsEmojiOpen(true);
+    setIsEmojiOpen(true)
   }
 
   function handleCloseEmoji() {
-    setIsEmojiOpen(false);
+    setIsEmojiOpen(false)
   }
 
   function handleEmojiClick(data: EmojiClickData) {
-    setMessageToSend(messageToSend + data.emoji);
+    setMessageToSend(messageToSend + data.emoji)
   }
 
   function handleSendClick() {
-    if (messageToSend === '' || messageToSend.length === 0 || !user.id) return;
+    if (messageToSend === '' || messageToSend.length === 0 || !user.id) return
 
-    firebase.sendMessage(data, user.id, 'text', messageToSend, users);
+    firebase.sendMessage(data, user.id, 'text', messageToSend, users)
 
-    setMessageToSend('');
-    setIsEmojiOpen(false);
+    setMessageToSend('')
+    setIsEmojiOpen(false)
   }
 
   function handleInputKeyup(e: React.KeyboardEvent<HTMLInputElement>) {
     if (e.key === 'Enter') {
-      handleSendClick();
+      handleSendClick()
     }
   }
 
   function startListening() {
     if (browserSupportsSpeechRecognition && isMicrophoneAvailable) {
-      SpeechRecognition.startListening({ language: 'pt-br' });
+      SpeechRecognition.startListening({ language: 'pt-br' })
     } else {
       alert(
-        "Your browser doesn't support Speech Recognition our your mic is disabled."
-      );
+        "Your browser doesn't support Speech Recognition our your mic is disabled.",
+      )
     }
   }
 
   function stopListening() {
     if (browserSupportsSpeechRecognition && isMicrophoneAvailable) {
-      SpeechRecognition.stopListening();
+      SpeechRecognition.stopListening()
     } else {
       alert(
-        "Your browser doesn't support Speech Recognition our your mic is disabled."
-      );
+        "Your browser doesn't support Speech Recognition our your mic is disabled.",
+      )
     }
   }
 
   useEffect(() => {
-    setMessageToSend(transcript);
-  }, [transcript]);
+    setMessageToSend(transcript)
+  }, [transcript])
 
   useEffect(() => {
-    const body = chatBodyRef.current;
+    const body = chatBodyRef.current
 
-    if (!body) return;
+    if (!body) return
 
     if (body.scrollHeight > body.offsetHeight) {
-      body.scrollTop = body.scrollHeight - body.offsetHeight;
+      body.scrollTop = body.scrollHeight - body.offsetHeight
     }
-  }, [messagesList]);
+  }, [messagesList])
 
   useEffect(() => {
-    setMessagesList([]);
+    setMessagesList([])
 
-    const unsub = firebase.onChatContent(
-      data.chatId,
-      setMessagesList,
-      setUsers
-    );
+    const unsub = firebase.onChatContent(data.chatId, setMessagesList, setUsers)
 
-    return unsub;
-  }, [data.chatId]);
+    return unsub
+  }, [data.chatId])
 
   return (
     <div className={styles.chatWindow}>
@@ -208,5 +216,5 @@ export default function Chat({ user, data }: ChatProps) {
         </div>
       </footer>
     </div>
-  );
+  )
 }

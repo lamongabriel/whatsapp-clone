@@ -23,7 +23,7 @@ export default function Favicon() {
 
       <link rel="manifest" href="/site.webmanifest" />
 
-      <meta name="theme-color" content="#FFE604" />
+      <meta name="theme-color" content="#d1d7db" />
     </>
-  );
+  )
 }

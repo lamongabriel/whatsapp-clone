@@ -1,13 +1,13 @@
-import Image from 'next/image';
-import styles from './styles.module.scss';
+import Image from 'next/image'
+import styles from './styles.module.scss'
 
-import { ChatType } from '@/typings/Chat';
-import { formatDate } from '@/utils/formatDate';
+import { Chat } from '@/typings/Chat'
+import { formatDate } from '@/utils/formatDate'
 
 interface ChatListItemProps {
-  onClick: () => void;
-  active: boolean;
-  data: ChatType;
+  onClick: () => void
+  active: boolean
+  data: Chat
 }
 
 export default function ChatListItem({
@@ -41,5 +41,5 @@ export default function ChatListItem({
         </div>
       </div>
     </div>
-  );
+  )
 }

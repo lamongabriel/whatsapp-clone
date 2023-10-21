@@ -1,7 +1,13 @@
 {
-  "name": "whatsapp-clone",
-  "version": "0.1.0",
-  "private": true,
+  "name": "devchat",
+  "version": "1.0.0",
+  "private": false,
+  "license": "MIT",
+  "author": {
+    "email": "lamongabriel@icloud.com",
+    "name": "Gabriel Lamon",
+    "url": "https://lamongabriel.vercel.app/"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",

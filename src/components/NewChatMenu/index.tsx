@@ -1,47 +1,61 @@
-import firebase from '@/config/firebase';
-import { useAppSelector } from '@/redux/hooks';
-import { ChatType } from '@/typings/Chat';
-import { User } from '@/typings/User';
-import { ArrowBack } from '@mui/icons-material';
-import Image from 'next/image';
-import { useEffect, useState } from 'react';
-import styles from './styles.module.scss';
+// React modules
+import { useEffect, useState } from 'react'
+
+// NEXT modules
+import Image from 'next/image'
+
+// Typings
+import { Chat } from '@/typings/Chat'
+import { User } from '@/typings/User'
+
+// Icons
+import { ArrowBack } from '@mui/icons-material'
+
+import styles from './styles.module.scss'
+
+// Firebase
+import { FirebaseService } from '@/services/firebaseService'
+
+// Redux
+import { useAppSelector } from '@/redux/hooks/useAppSelector'
 
 interface NewChatMenuProps {
-  visible: boolean;
-  user: User;
-  chatList: ChatType[];
-  onClose: () => void;
+  visible: boolean
+  user: User
+  chatList: Chat[]
+  onClose: () => void
 }
 
 export default function NewChatMenu({ visible, onClose }: NewChatMenuProps) {
-  const [contactList, setContactList] = useState<User[]>([] as User[]);
-  const user = useAppSelector((state) => state.user)?.user;
+  const firebase = new FirebaseService()
 
-  const newChatMenuStyles = { left: visible ? 0 : '-26rem' };
+  const [contactList, setContactList] = useState<User[]>([] as User[])
+  const user = useAppSelector((state) => state.user)?.user
+
+  const newChatMenuStyles = { left: visible ? 0 : '-26rem' }
 
   useEffect(() => {
     const getContactList = async () => {
       if (!user?.id) {
-        return;
+        return
       }
 
-      const contacts = await firebase.getContactList(user.id);
+      const contacts = await firebase.getContactsByUserId(user.id)
 
-      setContactList(contacts);
-    };
+      setContactList(contacts)
+    }
 
-    getContactList();
-  }, []);
+    getContactList()
+  }, [])
 
   async function handleAddChat(userToChat: User) {
-    await firebase.addNewChat(user, userToChat);
+    await firebase.createChatBetweenTwoUsers(user, userToChat)
 
-    onClose();
+    onClose()
   }
 
   if (contactList.length === 0) {
-    return null;
+    return null
   }
 
   return (
@@ -69,11 +83,11 @@ export default function NewChatMenu({ visible, onClose }: NewChatMenuProps) {
             />
             <div>
               <h2>{contact.name}</h2>
-              <p>Hey there! I am using Whatsapp</p>
+              <p>Hey there! I am using DevChat</p>
             </div>
           </div>
         ))}
       </div>
     </div>
-  );
+  )
 }

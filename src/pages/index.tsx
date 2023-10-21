@@ -1,50 +1,62 @@
-import { useEffect, useState } from 'react';
-import Image from 'next/image';
-import Router from 'next/router';
+// React Modules
+import { useEffect, useState } from 'react'
 
-import ChatListItem from '@/components/ChatListItem';
-import NoChatSelected from '@/components/NoChatSelected';
-import Chat from '@/components/Chat';
-import NewChatMenu from '@/components/NewChatMenu';
-import { DonutLarge, ChatSharp, MoreVert, Search } from '@mui/icons-material';
+// NEXT modules
+import Image from 'next/image'
+import Router from 'next/router'
+import Head from 'next/head'
 
-import styles from '../styles/pages/Home.module.scss';
+// Components
+import ChatListItem from '@/components/ChatListItem'
+import NoChatSelected from '@/components/NoChatSelected'
+import Chat from '@/components/Chat'
+import NewChatMenu from '@/components/NewChatMenu'
 
-import { ChatType } from '@/typings/Chat';
-import { useAppSelector } from '@/redux/hooks';
-import firebase from '@/config/firebase';
-import Head from 'next/head';
+// Icons and Styles
+import { DonutLarge, ChatSharp, MoreVert, Search } from '@mui/icons-material'
+import styles from '../styles/pages/Home.module.scss'
+
+// Typings
+import { Chat as ChatType } from '@/typings/Chat'
+
+// Firebase
+import { FirebaseService } from '@/services/firebaseService'
+
+// Redux
+import { useAppSelector } from '@/redux/hooks/useAppSelector'
 
 export default function Home() {
-  const user = useAppSelector((state) => state.user)?.user;
+  const firebase = new FirebaseService()
 
-  const [chatList, setChatList] = useState<ChatType[]>([]);
+  const user = useAppSelector((state) => state.user)?.user
 
-  const [activeChat, setActiveChat] = useState<ChatType>({} as ChatType);
-  const [showNewChat, setShowNewChat] = useState(false);
+  const [chatList, setChatList] = useState<ChatType[]>([])
+
+  const [activeChat, setActiveChat] = useState<ChatType>({} as ChatType)
+  const [showNewChat, setShowNewChat] = useState(false)
 
   function handleOpenNewChatMenu() {
-    setShowNewChat(true);
+    setShowNewChat(true)
   }
 
   function handleCloseNewChatMenu() {
-    setShowNewChat(false);
+    setShowNewChat(false)
   }
 
   useEffect(() => {
     if (!user?.id) {
-      Router.push('/login');
+      Router.push('/login')
     } else {
-      const unsub = firebase.onChatList(user.id, setChatList);
+      const unsub = firebase.onChatList(user.id, setChatList)
 
-      return unsub;
+      return unsub
     }
-  }, [user]);
+  }, [user])
 
   return (
     <main className={styles.main}>
       <Head>
-        <title>WhatsApp - {user?.name}</title>
+        <title>DevChat - {user?.name}</title>
       </Head>
       <div className={styles.appWindow}>
         <NewChatMenu
@@ -100,5 +112,5 @@ export default function Home() {
         </div>
       </div>
     </main>
-  );
+  )
 }
