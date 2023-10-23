@@ -4,5 +4,5 @@ export interface Chat {
   image: string
   with: string
   lastMessage: string
-  lastMessageDate: string
+  lastMessageDate: number
 }

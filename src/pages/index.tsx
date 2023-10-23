@@ -57,8 +57,6 @@ export default function Home() {
     const checkAuthentication = async () => {
       const isFirebaseLogged = auth?.currentUser
 
-      console.log(isFirebaseLogged)
-
       if (!isFirebaseLogged) {
         Router.push('/login')
 

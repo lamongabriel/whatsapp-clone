@@ -1,16 +1,7 @@
-export function formatDate(dateToFormat: string | Date) {
-  const date = new Date(dateToFormat)
+import { format } from 'date-fns'
 
-  const hours24 = date.getHours()
-  const minutesOneDigit = date.getMinutes()
+export function formatDate(dateToFormat: Date | number) {
+  const date = format(dateToFormat, 'HH:mm')
 
-  const ampm = hours24 >= 12 ? 'PM' : 'AM'
-
-  const hours12 = hours24 % 12 || 12
-  const minutesTwoDigits =
-    minutesOneDigit < 10 ? '0' + minutesOneDigit : minutesOneDigit
-
-  const time = hours12 + ':' + minutesTwoDigits + ' ' + ampm
-
-  return time
+  return date
 }

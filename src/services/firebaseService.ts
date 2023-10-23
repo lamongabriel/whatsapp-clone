@@ -130,9 +130,9 @@ class FirebaseService {
       if (!doc.exists()) return
 
       const data = doc.data()
-      if (!data?.chats) return
+      if (!data?.userChats) return
 
-      const chats = [...data.chats] as Chat[]
+      const chats = [...data.userChats] as Chat[]
       const sortedChats = sortChats(chats)
 
       setChatList(sortedChats)
@@ -167,7 +167,7 @@ class FirebaseService {
     message: string,
     users: string[],
   ) {
-    const now = new Date().toLocaleString()
+    const now = new Date().getTime()
 
     updateDoc(doc(collection(firebaseDB, 'chats'), chat.chatId), {
       messages: arrayUnion({

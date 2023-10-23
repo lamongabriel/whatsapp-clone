@@ -48,8 +48,6 @@ export default function Login() {
         setError(true)
       }
     } catch (err) {
-      console.log(err)
-
       setError(true)
     }
   }

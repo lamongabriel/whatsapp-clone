@@ -2,6 +2,7 @@ import { Message } from '@/typings/Message'
 import { User } from '@/typings/User'
 
 import styles from './styles.module.scss'
+import { formatDate } from '@/utils/formatDate'
 
 interface MessageItemProps {
   message: Message
@@ -11,9 +12,7 @@ interface MessageItemProps {
 export default function MessageItem({ message, user }: MessageItemProps) {
   const isAuthorCurrentUser = message.author === user.id
 
-  const now = new Date(message.date)
-
-  const formattedDate = `${now.getHours()}:${now.getMinutes()}`
+  const date = formatDate(message.date)
 
   return (
     <div
@@ -25,7 +24,7 @@ export default function MessageItem({ message, user }: MessageItemProps) {
     >
       <div className={styles.messageItem}>
         <div className={styles.messageText}>{message.body}</div>
-        <div className={styles.messageDate}>{formattedDate}</div>
+        <div className={styles.messageDate}>{date}</div>
       </div>
     </div>
   )
