@@ -130,9 +130,9 @@ class FirebaseService {
       if (!doc.exists()) return
 
       const data = doc.data()
-      if (!data?.userChats) return
+      if (!data?.chats) return
 
-      const chats = [...data.userChats] as Chat[]
+      const chats = [...data.chats] as Chat[]
       const sortedChats = sortChats(chats)
 
       setChatList(sortedChats)
