@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+
 // React Modules
 import { useEffect, useState } from 'react'
 
@@ -11,6 +13,7 @@ import ChatListItem from '@/components/ChatListItem'
 import NoChatSelected from '@/components/NoChatSelected'
 import Chat from '@/components/Chat'
 import NewChatMenu from '@/components/NewChatMenu'
+import Loading from '@/components/Loading'
 
 // Icons and Styles
 import { DonutLarge, ChatSharp, MoreVert, Search } from '@mui/icons-material'
@@ -18,22 +21,27 @@ import styles from '../styles/pages/Home.module.scss'
 
 // Typings
 import { Chat as ChatType } from '@/typings/Chat'
+import { User } from '@/typings/User'
 
 // Firebase
 import { FirebaseService } from '@/services/firebaseService'
+import { getAuth } from 'firebase/auth'
 
 // Redux
 import { useAppSelector } from '@/redux/hooks/useAppSelector'
+import { useAppDispatch } from '@/redux/hooks/useAppDispatch'
+import { setUser } from '@/redux/slices/user'
 
 export default function Home() {
-  const firebase = new FirebaseService()
-
-  const user = useAppSelector((state) => state.user)?.user
-
   const [chatList, setChatList] = useState<ChatType[]>([])
-
   const [activeChat, setActiveChat] = useState<ChatType>({} as ChatType)
   const [showNewChat, setShowNewChat] = useState(false)
+  const [loading, setLoading] = useState(true)
+
+  const firebase = new FirebaseService()
+  const dispatch = useAppDispatch()
+
+  const user = useAppSelector((state) => state.user)?.user
 
   function handleOpenNewChatMenu() {
     setShowNewChat(true)
@@ -44,14 +52,38 @@ export default function Home() {
   }
 
   useEffect(() => {
-    if (!user?.id) {
-      Router.push('/login')
-    } else {
-      const unsub = firebase.onChatList(user.id, setChatList)
+    const auth = getAuth()
 
-      return unsub
+    const checkAuthentication = async () => {
+      const isFirebaseLogged = auth?.currentUser
+
+      console.log(isFirebaseLogged)
+
+      if (!isFirebaseLogged) {
+        Router.push('/login')
+
+        return
+      }
+
+      const user = {
+        name: auth.currentUser.displayName,
+        email: auth.currentUser.email,
+        id: auth.currentUser.uid,
+        avatar: auth.currentUser.photoURL,
+      }
+
+      dispatch(setUser(user as User))
+      firebase.onChatList(user.id, setChatList)
+
+      setLoading(false)
     }
-  }, [user])
+
+    auth.onAuthStateChanged(checkAuthentication)
+  }, [])
+
+  if (loading) {
+    return <Loading />
+  }
 
   return (
     <main className={styles.main}>
